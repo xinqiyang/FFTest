@@ -1,13 +1,12 @@
 <?php
+//test example module for service
+class ServiceTest extends PHPUnit_Framework_TestCase
+{
 
-require_once dirname(dirname(__FILE__))."/TestConfiguration.php";
+    public function testService()
+    {
+        //add your test code here
+        $this->assertEquals(true, true);
 
-class ServiceTest extends PHPUnit_Framework_TestCase {
-	
-	public function testService()
-	{
-
-		$this->assertEquals(true,true);
-		
-	}	
+    }
 }

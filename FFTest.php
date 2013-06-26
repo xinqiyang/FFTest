@@ -1,26 +1,25 @@
 <?php
 
 /**
- * Test Suite
- * run a testcase :   php TestSuite.php TestAction
- * run all testcase :   php TestSuite.php
+ * FFTest
  *
  */
 
 require_once 'PHPUnit/Autoload.php';
 require_once 'TestHelper.php';
+require_once 'TestConfiguration.php';
 
-
-
-class FFTest extends PHPUnit_Framework_TestSuite {
-    public function __construct() {
+class FFTest extends PHPUnit_Framework_TestSuite
+{
+    public function __construct()
+    {
         $dir = dirname(__FILE__);
         //if have the var of the script then run the one file
         if (!empty($_SERVER['argv'][2]) && !empty($_SERVER['argv'][3])) {
             $file = $_SERVER['argv'][2] . DIRECTORY_SEPARATOR . $_SERVER['argv'][3] . '.php';
             if (is_file($file)) {
                 $this->addTestFile($file);
-            }else {
+            } else {
                 echo "$file FILE NOT FIND ,PLEASE CHECK \n";
             }
         } else if (!empty($_SERVER['argv'][2]) && $_SERVER['argv'][2] != 'all') {
@@ -33,7 +32,7 @@ class FFTest extends PHPUnit_Framework_TestSuite {
                         $this->addTestFile($f);
                     }
                 }
-            }else {
+            } else {
                 echo "$path is not a dir or the dir is empty!";
             }
         } else if (!empty($_SERVER['argv'][2]) && $_SERVER['argv'][2] == 'all') {
@@ -56,12 +55,13 @@ class FFTest extends PHPUnit_Framework_TestSuite {
                 }
             }
         } else {
-           echo "******************FFTestSuite Useage:*************************\nphpunit FFTest.php all ,test all of testcases.\nphpunit FFTest.php foldername , test testcase behind the folder.\nphpunit FFTest.php foldername filename , run test the one .\n";
+            echo "******************FFTestSuite Useage:*************************\nphpunit FFTest.php all ,test all of testcases.\nphpunit FFTest.php foldername , test testcase behind the folder.\nphpunit FFTest.php foldername filename , run test the one .\n";
         }
         echo "ALL TEST CASE RUN COMPLETE！ ^_^ \n\n\n";
     }
 
-    public static function suite() {
+    public static function suite()
+    {
         return new self();
     }
 }
