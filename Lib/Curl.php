@@ -20,20 +20,34 @@ class Curl
      * use curl to get
      * @param string $url url
      */
-    public static function get($url, $header = 0)
+    public static function get($url, $header = 0,$timeout=3)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         //set header of the page
-        curl_setopt($curl, CURLOPT_HEADER, $header);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);//CURLOPT_HTTPHEADER
         //set time out seconds
-        curl_setopt($curl, CURLOPT_TIMEOUT, 4);
+        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         // set curl params
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         //get data
-        $data = curl_exec($curl);
+        $response = curl_exec($curl);
+        var_dump($response);
+        var_dump(curl_getinfo($curl));
+
+        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        var_dump($header_size);
+
+        exit;
+
+        $header = substr($response, 0, $header_size);
+        $body = substr($response, $header_size);
+
+        //list($header, $body) = explode("\r\n\r\n", $response, 2);
+
         curl_close($curl);
-        return $data;
+        return array('body'=>$body,'header'=>$header);
+
     }
 
     /**
@@ -43,6 +57,7 @@ class Curl
      */
     public static function post($url, $params)
     {
+        $url = $url;
         $o = "";
         foreach ($params as $k => $v) {
             $o .= "$k=" . urlencode($v) . "&";

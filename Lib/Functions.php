@@ -597,10 +597,12 @@ function msubstr($str, $start = 0, $length, $charset = "utf-8", $suffix = true) 
 
 /**
  * add params to url
+ *
  * @param string $strUrl
  * @param array $arrParamsToAdd array('key'=>'value','key1'=>'value1')
  */
 function addParamToUrl($strUrl, $arrParamsToAdd = array()) {
+    $strUrl = C('apiurl').$strUrl;
     $strQuery = substr(strstr($strUrl, "?"), 1); // string or false
     $arrQueryParams = array();
     if ($strQuery) {
@@ -1228,4 +1230,85 @@ function sbcToDbc($strString) {
     );
     return str_replace($DBC, $SBC, $strString);
 }
+
+/**
+ * Parse a set of HTTP headers
+ *
+ * @param array The php headers to be parsed
+ * @param [string] The name of the header to be retrieved
+ * @return A header value if a header is passed;
+ *         An array with all the headers otherwise
+ */
+function parseHeaders($headers, $header = null)
+{
+    $output = array();
+
+    if ('HTTP' === substr($headers[0], 0, 4)) {
+        list(, $output['status'], $output['status_text']) = explode(' ', $headers[0]);
+        unset($headers[0]);
+    }
+
+    foreach ($headers as $v) {
+        $h = preg_split('/:\s*/', $v);
+        $output[strtolower($h[0])] = $h[1];
+    }
+
+    if (null !== $header) {
+        if (isset($output[strtolower($header)])) {
+            return $output[strtolower($header)];
+        }
+
+        return;
+    }
+
+    return $output;
+}
+
+
+function bdump($func,$var)
+{
+    var_dump("$func Start==========================");
+
+    var_dump($var);
+
+    var_dump("$func End==========================");   
+}
+
+
+function multi_getContents()
+{
+    $contents = '';
+    $opts = array(
+           'http'=>array(
+             'method'=>"GET", 
+             'timeout'=>1,  // set timeout 1 sec.
+        )
+    );
+    $context = stream_context_create($opts); 
+    $cnt=1;
+    while(($contents = @file_get_contents("$url",false,$context)) === false && $cnt <= 10  ) {
+        $cnt++;
+    }
+    return $contents;
+}
+
+//decode line then return the decode error
+function decodeLine($str)
+{
+    $ret = array();
+    $arr = explode("\n", $str);
+    
+    if($arr) {
+        foreach ($arr as $one) {
+            if($one) {
+                $ret[] = json_decode($one,true);
+            }
+        }
+    }
+    return $ret;
+}
+
+
+
+
 
